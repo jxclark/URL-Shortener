@@ -2,6 +2,11 @@ import { Router } from 'express';
 
 const router = Router();
 
+/**
+ * Routes
+ */
+import authRoute from '@/routes/auth';
+
 router.get('/', (req, res) => {
   res.status(200).json({
     message: 'API is live',
@@ -11,5 +16,8 @@ router.get('/', (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+// Auth routes
+router.use('/auth', authRoute);
 
 export default router;
