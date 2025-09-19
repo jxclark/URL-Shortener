@@ -9,9 +9,11 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
 
+// Custom modules
 import config from '@/config';
 import corsOptions from '@/lib/cors';
 import { logger, logtail } from '@/lib/winston';
+import { connectToDatabase, disconnectDatabase } from '@/lib/mongoose';
 
 import router from '@/routes';
 
@@ -25,7 +27,7 @@ server.use(cors(corsOptions));
 server.use(helmet());
 
 /**
- * PArse JSON request bodies
+ * Parse JSON request bodies
  */
 server.use(express.json());
 
@@ -52,6 +54,9 @@ server.use(compression());
 // Immmeditately Invoked Async Function to initialize the application
 (async function (): Promise<void> {
   try {
+    // Estanblish database connection
+    await connectToDatabase();
+
     server.use('/', router);
 
     server.listen(config.PORT, () => {
@@ -69,6 +74,9 @@ server.use(compression());
 // Handles graceful server shutdown on termination signals
 const serverTermination = async (signal: NodeJS.Signals): Promise<void> => {
   try {
+    // Disconnect from database
+    await disconnectDatabase();
+
     logger.info('Server shutdown', signal);
 
     // Flush any remaining logs to Logtail before existing
