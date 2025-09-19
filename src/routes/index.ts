@@ -6,6 +6,7 @@ const router = Router();
  * Routes
  */
 import authRoute from '@/routes/auth';
+import userRoute from '@/routes/user';
 
 router.get('/', (req, res) => {
   res.status(200).json({
@@ -19,5 +20,8 @@ router.get('/', (req, res) => {
 
 // Auth routes
 router.use('/auth', authRoute);
+
+// User routes
+router.use('/users', userRoute);
 
 export default router;
